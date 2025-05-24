@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="ValidEnum Annotation Tests" tests="10" skipped="0" failures="0" errors="0" timestamp="2025-05-24T15:45:38.628Z" hostname="Mac.lan" time="0.989">
+  <properties/>
+  <testcase name="Should have correct annotation properties" classname="com.exabyting.springosk.annotation.ValidEnumTest" time="0.014"/>
+  <testcase name="Should use ValidEnumValidator as constraint validator" classname="com.exabyting.springosk.annotation.ValidEnumTest" time="0.001"/>
+  <testcase name="Should have correct retention policy" classname="com.exabyting.springosk.annotation.ValidEnumTest" time="0.0"/>
+  <testcase name="Should allow custom message" classname="com.exabyting.springosk.annotation.ValidEnumTest" time="0.0"/>
+  <testcase name="Should have correct target elements" classname="com.exabyting.springosk.annotation.ValidEnumTest" time="0.001"/>
+  <testcase name="Should have correct annotation properties" classname="com.exabyting.springosk.annotation.ValidEnumTest" time="0.0"/>
+  <testcase name="Should use ValidEnumValidator as constraint validator" classname="com.exabyting.springosk.annotation.ValidEnumTest" time="0.0"/>
+  <testcase name="Should have correct retention policy" classname="com.exabyting.springosk.annotation.ValidEnumTest" time="0.0"/>
+  <testcase name="Should allow custom message" classname="com.exabyting.springosk.annotation.ValidEnumTest" time="0.0"/>
+  <testcase name="Should have correct target elements" classname="com.exabyting.springosk.annotation.ValidEnumTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

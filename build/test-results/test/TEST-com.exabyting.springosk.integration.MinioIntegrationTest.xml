@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="MinIO Integration Tests with Testcontainers" tests="3" skipped="0" failures="0" errors="0" timestamp="2025-05-24T15:45:42.505Z" hostname="Mac.lan" time="0.201">
+  <properties/>
+  <testcase name="Should download an object from MinIO" classname="com.exabyting.springosk.integration.MinioIntegrationTest" time="0.166"/>
+  <testcase name="Should upload an object to MinIO" classname="com.exabyting.springosk.integration.MinioIntegrationTest" time="0.02"/>
+  <testcase name="Should delete an object from MinIO" classname="com.exabyting.springosk.integration.MinioIntegrationTest" time="0.015"/>
+  <system-out><![CDATA[2025-05-24T21:45:41.016+06:00  INFO 39530 --- [    Test worker] org.testcontainers.images.PullPolicy     : Image pull policy will be performed by: DefaultPullPolicy()
+2025-05-24T21:45:41.017+06:00  INFO 39530 --- [    Test worker] o.t.utility.ImageNameSubstitutor         : Image name substitution will be performed by: DefaultImageNameSubstitutor (composite of 'ConfigurationFileImageNameSubstitutor' and 'PrefixingImageNameSubstitutor')
+2025-05-24T21:45:41.026+06:00  INFO 39530 --- [    Test worker] org.testcontainers.DockerClientFactory   : Testcontainers version: 1.21.0
+2025-05-24T21:45:41.249+06:00  INFO 39530 --- [    Test worker] o.t.d.DockerClientProviderStrategy       : Loaded org.testcontainers.dockerclient.UnixSocketClientProviderStrategy from ~/.testcontainers.properties, will try it first
+2025-05-24T21:45:41.457+06:00  INFO 39530 --- [    Test worker] o.t.d.DockerClientProviderStrategy       : Found Docker environment with local Unix socket (unix:///var/run/docker.sock)
+2025-05-24T21:45:41.458+06:00  INFO 39530 --- [    Test worker] org.testcontainers.DockerClientFactory   : Docker host IP address is localhost
+2025-05-24T21:45:41.471+06:00  INFO 39530 --- [    Test worker] org.testcontainers.DockerClientFactory   : Connected to docker: 
+  Server Version: 28.1.1
+  API Version: 1.49
+  Operating System: Docker Desktop
+  Total Memory: 3920 MB
+  Labels: 
+    com.docker.desktop.address=unix:///Users/sadmansakib/Library/Containers/com.docker.docker/Data/docker-cli.sock
+2025-05-24T21:45:41.527+06:00  INFO 39530 --- [    Test worker] tc.testcontainers/ryuk:0.11.0            : Creating container for image: testcontainers/ryuk:0.11.0
+2025-05-24T21:45:41.736+06:00  INFO 39530 --- [    Test worker] tc.testcontainers/ryuk:0.11.0            : Container testcontainers/ryuk:0.11.0 is starting: 2e1028e185982502158a23efe26b8ebfa61f162cb32565cbb7ea5960ecb5c572
+2025-05-24T21:45:41.887+06:00  INFO 39530 --- [    Test worker] tc.testcontainers/ryuk:0.11.0            : Container testcontainers/ryuk:0.11.0 started in PT0.359492S
+2025-05-24T21:45:41.889+06:00  INFO 39530 --- [    Test worker] o.t.utility.RyukResourceReaper           : Ryuk started - will monitor and terminate Testcontainers containers on JVM exit
+2025-05-24T21:45:41.889+06:00  INFO 39530 --- [    Test worker] org.testcontainers.DockerClientFactory   : Checking the system...
+2025-05-24T21:45:41.889+06:00  INFO 39530 --- [    Test worker] org.testcontainers.DockerClientFactory   : ✔︎ Docker server version should be at least 1.6.0
+2025-05-24T21:45:41.890+06:00  INFO 39530 --- [    Test worker] tc.minio/minio:latest                    : Creating container for image: minio/minio:latest
+2025-05-24T21:45:41.914+06:00  INFO 39530 --- [    Test worker] tc.minio/minio:latest                    : Container minio/minio:latest is starting: 540337ec978eebda84b5f2caace5cb6f1fd4150f95c1af2cc1509a3372a447c3
+2025-05-24T21:45:42.408+06:00  INFO 39530 --- [    Test worker] tc.minio/minio:latest                    : Container minio/minio:latest started in PT0.517943S
+2025-05-24T21:45:42.430+06:00  INFO 39530 --- [    Test worker] c.e.s.integration.MinioIntegrationTest   : MinIO container started with API endpoint: http://localhost:53658
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.5.0)
+
+2025-05-24T21:45:42.456+06:00  INFO 39530 --- [    Test worker] c.e.s.integration.MinioIntegrationTest   : Starting MinioIntegrationTest using Java 21.0.5 with PID 39530 (started by sadmansakib in /Users/sadmansakib/workspace/exabyting/spring-object-storage-kit)
+2025-05-24T21:45:42.456+06:00  INFO 39530 --- [    Test worker] c.e.s.integration.MinioIntegrationTest   : No active profile set, falling back to 1 default profile: "default"
+2025-05-24T21:45:42.501+06:00  INFO 39530 --- [    Test worker] c.e.springosk.config.MinioConfig         : Initializing MinioClient with endpoint: http://localhost:53658
+2025-05-24T21:45:42.502+06:00  INFO 39530 --- [    Test worker] c.e.springosk.config.MinioConfig         : MinioClient successfully initialized for endpoint: http://localhost:53658
+2025-05-24T21:45:42.504+06:00  INFO 39530 --- [    Test worker] c.e.s.integration.MinioIntegrationTest   : Started MinioIntegrationTest in 0.072 seconds (process running for 4.475)
+2025-05-24T21:45:42.584+06:00  INFO 39530 --- [    Test worker] c.e.s.integration.MinioIntegrationTest   : Created test bucket: test-bucket-1748101540992
+2025-05-24T21:45:42.602+06:00  INFO 39530 --- [    Test worker] c.e.s.integration.MinioIntegrationTest   : Starting MinIO cleanup for bucket: test-bucket-1748101540992
+2025-05-24T21:45:42.668+06:00  INFO 39530 --- [    Test worker] c.e.s.integration.MinioIntegrationTest   : Successfully deleted 1 objects from bucket: test-bucket-1748101540992
+2025-05-24T21:45:42.671+06:00  INFO 39530 --- [    Test worker] c.e.s.integration.MinioIntegrationTest   : Successfully deleted bucket: test-bucket-1748101540992
+2025-05-24T21:45:42.677+06:00  INFO 39530 --- [    Test worker] c.e.s.integration.MinioIntegrationTest   : Created test bucket: test-bucket-1748101540992
+2025-05-24T21:45:42.682+06:00  INFO 39530 --- [    Test worker] c.e.s.integration.MinioIntegrationTest   : Starting MinIO cleanup for bucket: test-bucket-1748101540992
+2025-05-24T21:45:42.688+06:00  INFO 39530 --- [    Test worker] c.e.s.integration.MinioIntegrationTest   : Successfully deleted 1 objects from bucket: test-bucket-1748101540992
+2025-05-24T21:45:42.691+06:00  INFO 39530 --- [    Test worker] c.e.s.integration.MinioIntegrationTest   : Successfully deleted bucket: test-bucket-1748101540992
+2025-05-24T21:45:42.695+06:00  INFO 39530 --- [    Test worker] c.e.s.integration.MinioIntegrationTest   : Created test bucket: test-bucket-1748101540992
+2025-05-24T21:45:42.702+06:00  INFO 39530 --- [    Test worker] c.e.s.integration.MinioIntegrationTest   : Starting MinIO cleanup for bucket: test-bucket-1748101540992
+2025-05-24T21:45:42.705+06:00  INFO 39530 --- [    Test worker] c.e.s.integration.MinioIntegrationTest   : No objects found in bucket test-bucket-1748101540992 to delete.
+2025-05-24T21:45:42.706+06:00  INFO 39530 --- [    Test worker] c.e.s.integration.MinioIntegrationTest   : Successfully deleted bucket: test-bucket-1748101540992
+2025-05-24T21:45:42.712+06:00  INFO 39530 --- [    Test worker] c.e.s.integration.MinioIntegrationTest   : MinIO container is still running. Testcontainers will manage its shutdown.
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

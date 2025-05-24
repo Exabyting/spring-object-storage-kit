@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.exabyting.springosk.config.S3ConfigTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2025-05-24T15:45:40.983Z" hostname="Mac.lan" time="0.001">
+  <properties/>
+  <testcase name="s3ClientBeanShouldBeCreated()" classname="com.exabyting.springosk.config.S3ConfigTest" time="0.001"/>
+  <system-out><![CDATA[
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.5.0)
+
+2025-05-24T21:45:40.553+06:00  INFO 39530 --- [    Test worker] c.e.springosk.config.S3ConfigTest        : Starting S3ConfigTest using Java 21.0.5 with PID 39530 (started by sadmansakib in /Users/sadmansakib/workspace/exabyting/spring-object-storage-kit)
+2025-05-24T21:45:40.553+06:00  INFO 39530 --- [    Test worker] c.e.springosk.config.S3ConfigTest        : No active profile set, falling back to 1 default profile: "default"
+2025-05-24T21:45:40.983+06:00  INFO 39530 --- [    Test worker] c.e.springosk.config.S3ConfigTest        : Started S3ConfigTest in 0.446 seconds (process running for 2.953)
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,130 @@
+{
+  "groups": [
+    {
+      "name": "object-storage-kit",
+      "type": "com.exabyting.springosk.properties.OskProperties",
+      "sourceType": "com.exabyting.springosk.properties.OskProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "object-storage-kit.accelerate-mode-enabled",
+      "type": "java.lang.Boolean",
+      "sourceType": "com.exabyting.springosk.properties.OskProperties"
+    },
+    {
+      "name": "object-storage-kit.access-key",
+      "type": "java.lang.String",
+      "sourceType": "com.exabyting.springosk.properties.OskProperties"
+    },
+    {
+      "name": "object-storage-kit.auto-create-bucket",
+      "type": "java.lang.Boolean",
+      "sourceType": "com.exabyting.springosk.properties.OskProperties"
+    },
+    {
+      "name": "object-storage-kit.chunked-encoding-disabled",
+      "type": "java.lang.Boolean",
+      "sourceType": "com.exabyting.springosk.properties.OskProperties"
+    },
+    {
+      "name": "object-storage-kit.connection-timeout-millis",
+      "type": "java.lang.Integer",
+      "sourceType": "com.exabyting.springosk.properties.OskProperties"
+    },
+    {
+      "name": "object-storage-kit.default-bucket",
+      "type": "java.lang.String",
+      "sourceType": "com.exabyting.springosk.properties.OskProperties"
+    },
+    {
+      "name": "object-storage-kit.dns-resolver-cache-size",
+      "type": "java.lang.Integer",
+      "sourceType": "com.exabyting.springosk.properties.OskProperties"
+    },
+    {
+      "name": "object-storage-kit.dual-stack-enabled",
+      "type": "java.lang.Boolean",
+      "sourceType": "com.exabyting.springosk.properties.OskProperties"
+    },
+    {
+      "name": "object-storage-kit.endpoint",
+      "type": "java.lang.String",
+      "sourceType": "com.exabyting.springosk.properties.OskProperties"
+    },
+    {
+      "name": "object-storage-kit.minimum-upload-part-size",
+      "type": "java.lang.Long",
+      "sourceType": "com.exabyting.springosk.properties.OskProperties"
+    },
+    {
+      "name": "object-storage-kit.multipart-copy-part-size",
+      "type": "java.lang.Long",
+      "sourceType": "com.exabyting.springosk.properties.OskProperties"
+    },
+    {
+      "name": "object-storage-kit.multipart-copy-threshold",
+      "type": "java.lang.Long",
+      "sourceType": "com.exabyting.springosk.properties.OskProperties"
+    },
+    {
+      "name": "object-storage-kit.multipart-min-part-size",
+      "type": "java.lang.Long",
+      "sourceType": "com.exabyting.springosk.properties.OskProperties"
+    },
+    {
+      "name": "object-storage-kit.path-style-access",
+      "type": "java.lang.Boolean",
+      "sourceType": "com.exabyting.springosk.properties.OskProperties"
+    },
+    {
+      "name": "object-storage-kit.payload-signing-enabled",
+      "type": "java.lang.Boolean",
+      "sourceType": "com.exabyting.springosk.properties.OskProperties"
+    },
+    {
+      "name": "object-storage-kit.region",
+      "type": "java.lang.String",
+      "sourceType": "com.exabyting.springosk.properties.OskProperties"
+    },
+    {
+      "name": "object-storage-kit.secret-key",
+      "type": "java.lang.String",
+      "sourceType": "com.exabyting.springosk.properties.OskProperties"
+    },
+    {
+      "name": "object-storage-kit.session-token",
+      "type": "java.lang.String",
+      "sourceType": "com.exabyting.springosk.properties.OskProperties"
+    },
+    {
+      "name": "object-storage-kit.socket-timeout-millis",
+      "type": "java.lang.Integer",
+      "sourceType": "com.exabyting.springosk.properties.OskProperties"
+    },
+    {
+      "name": "object-storage-kit.storage-type",
+      "type": "com.exabyting.springosk.properties.StorageType",
+      "sourceType": "com.exabyting.springosk.properties.OskProperties"
+    },
+    {
+      "name": "object-storage-kit.user-agent-prefix",
+      "type": "java.lang.String",
+      "sourceType": "com.exabyting.springosk.properties.OskProperties"
+    },
+    {
+      "name": "object-storage-kit.user-agent-suffix",
+      "type": "java.lang.String",
+      "sourceType": "com.exabyting.springosk.properties.OskProperties"
+    },
+    {
+      "name": "object-storage-kit.wire-logging-enabled",
+      "type": "java.lang.Boolean",
+      "sourceType": "com.exabyting.springosk.properties.OskProperties"
+    }
+  ],
+  "hints": [],
+  "ignored": {
+    "properties": []
+  }
+}

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="StorageType Enum Tests" tests="14" skipped="0" failures="0" errors="0" timestamp="2025-05-24T15:45:38.981Z" hostname="Mac.lan" time="7.244">
+  <properties/>
+  <testcase name="Should handle toString method" classname="com.exabyting.springosk.properties.StorageTypeTest" time="0.001"/>
+  <testcase name="Should contain S3 storage type" classname="com.exabyting.springosk.properties.StorageTypeTest" time="0.0"/>
+  <testcase name="Should handle ordinal values correctly" classname="com.exabyting.springosk.properties.StorageTypeTest" time="0.0"/>
+  <testcase name="Should contain Minio storage type" classname="com.exabyting.springosk.properties.StorageTypeTest" time="0.0"/>
+  <testcase name="Should throw exception for invalid enum value" classname="com.exabyting.springosk.properties.StorageTypeTest" time="0.001"/>
+  <testcase name="Should have exactly two enum values" classname="com.exabyting.springosk.properties.StorageTypeTest" time="0.0"/>
+  <testcase name="Should verify all enum values are present" classname="com.exabyting.springosk.properties.StorageTypeTest" time="0.0"/>
+  <testcase name="Should handle toString method" classname="com.exabyting.springosk.properties.StorageTypeTest" time="0.0"/>
+  <testcase name="Should contain S3 storage type" classname="com.exabyting.springosk.properties.StorageTypeTest" time="0.001"/>
+  <testcase name="Should handle ordinal values correctly" classname="com.exabyting.springosk.properties.StorageTypeTest" time="0.001"/>
+  <testcase name="Should contain Minio storage type" classname="com.exabyting.springosk.properties.StorageTypeTest" time="0.0"/>
+  <testcase name="Should throw exception for invalid enum value" classname="com.exabyting.springosk.properties.StorageTypeTest" time="0.0"/>
+  <testcase name="Should have exactly two enum values" classname="com.exabyting.springosk.properties.StorageTypeTest" time="0.0"/>
+  <testcase name="Should verify all enum values are present" classname="com.exabyting.springosk.properties.StorageTypeTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

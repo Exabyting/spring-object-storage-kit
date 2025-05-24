@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="x-ua-compatible" content="IE=edge"/>
+<title>Test results - S3 Integration Tests with Testcontainers</title>
+<link href="../css/base-style.css" rel="stylesheet" type="text/css"/>
+<link href="../css/style.css" rel="stylesheet" type="text/css"/>
+<script src="../js/report.js" type="text/javascript"></script>
+</head>
+<body>
+<div id="content">
+<h1>S3 Integration Tests with Testcontainers</h1>
+<div class="breadcrumbs">
+<a href="../index.html">all</a> &gt; 
+<a href="../packages/com.exabyting.springosk.integration.html">com.exabyting.springosk.integration</a> &gt; S3IntegrationTest</div>
+<div id="summary">
+<table>
+<tr>
+<td>
+<div class="summaryGroup">
+<table>
+<tr>
+<td>
+<div class="infoBox" id="tests">
+<div class="counter">3</div>
+<p>tests</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="failures">
+<div class="counter">0</div>
+<p>failures</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="ignored">
+<div class="counter">0</div>
+<p>ignored</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="duration">
+<div class="counter">0.541s</div>
+<p>duration</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</td>
+<td>
+<div class="infoBox success" id="successRate">
+<div class="percent">100%</div>
+<p>successful</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="tab-container">
+<ul class="tabLinks">
+<li>
+<a href="#">Tests</a>
+</li>
+<li>
+<a href="#">Standard output</a>
+</li>
+</ul>
+<div class="tab">
+<h2>Tests</h2>
+<table>
+<thead>
+<tr>
+<th>Test</th>
+<th>Method name</th>
+<th>Duration</th>
+<th>Result</th>
+</tr>
+</thead>
+<tr>
+<td class="success">Should delete an object from S3</td>
+<td class="success">shouldDeleteObject()</td>
+<td class="success">0.031s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">Should download an object from S3</td>
+<td class="success">shouldDownloadObject()</td>
+<td class="success">0.490s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">Should upload an object to S3</td>
+<td class="success">shouldUploadObject()</td>
+<td class="success">0.020s</td>
+<td class="success">passed</td>
+</tr>
+</table>
+</div>
+<div class="tab">
+<h2>Standard output</h2>
+<span class="code">
+<pre>2025-05-24T21:45:42.894+06:00  INFO 39530 --- [    Test worker] tc.localstack/localstack:latest          : LOCALSTACK_HOST environment variable set to localhost (to match host-routable address for container)
+2025-05-24T21:45:42.894+06:00  INFO 39530 --- [    Test worker] tc.localstack/localstack:latest          : Creating container for image: localstack/localstack:latest
+2025-05-24T21:45:43.071+06:00  INFO 39530 --- [    Test worker] tc.localstack/localstack:latest          : Container localstack/localstack:latest is starting: b8c951e7487ae85dcae095499500bb288bf13d7d4d95f852a08c8375d5a04bb7
+2025-05-24T21:45:45.431+06:00  INFO 39530 --- [    Test worker] tc.localstack/localstack:latest          : Container localstack/localstack:latest started in PT2.537643S
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.5.0)
+
+2025-05-24T21:45:45.480+06:00  INFO 39530 --- [    Test worker] c.e.s.integration.S3IntegrationTest      : Starting S3IntegrationTest using Java 21.0.5 with PID 39530 (started by sadmansakib in /Users/sadmansakib/workspace/exabyting/spring-object-storage-kit)
+2025-05-24T21:45:45.480+06:00  INFO 39530 --- [    Test worker] c.e.s.integration.S3IntegrationTest      : No active profile set, falling back to 1 default profile: &quot;default&quot;
+2025-05-24T21:45:45.505+06:00  INFO 39530 --- [    Test worker] c.e.s.integration.S3IntegrationTest      : Started S3IntegrationTest in 0.048 seconds (process running for 7.476)
+2025-05-24T21:45:45.956+06:00  INFO 39530 --- [    Test worker] c.e.s.integration.S3IntegrationTest      : Starting S3 cleanup for bucket: test-bucket-1748101542891
+2025-05-24T21:45:45.991+06:00  INFO 39530 --- [    Test worker] c.e.s.integration.S3IntegrationTest      : Successfully deleted 1 objects from bucket: test-bucket-1748101542891
+2025-05-24T21:45:45.995+06:00  INFO 39530 --- [    Test worker] c.e.s.integration.S3IntegrationTest      : Successfully deleted bucket: test-bucket-1748101542891
+2025-05-24T21:45:46.009+06:00  INFO 39530 --- [    Test worker] c.e.s.integration.S3IntegrationTest      : Starting S3 cleanup for bucket: test-bucket-1748101542891
+2025-05-24T21:45:46.015+06:00  INFO 39530 --- [    Test worker] c.e.s.integration.S3IntegrationTest      : Successfully deleted 1 objects from bucket: test-bucket-1748101542891
+2025-05-24T21:45:46.017+06:00  INFO 39530 --- [    Test worker] c.e.s.integration.S3IntegrationTest      : Successfully deleted bucket: test-bucket-1748101542891
+2025-05-24T21:45:46.043+06:00  INFO 39530 --- [    Test worker] c.e.s.integration.S3IntegrationTest      : Starting S3 cleanup for bucket: test-bucket-1748101542891
+2025-05-24T21:45:46.046+06:00  INFO 39530 --- [    Test worker] c.e.s.integration.S3IntegrationTest      : No objects found in bucket test-bucket-1748101542891 to delete.
+2025-05-24T21:45:46.047+06:00  INFO 39530 --- [    Test worker] c.e.s.integration.S3IntegrationTest      : Successfully deleted bucket: test-bucket-1748101542891
+2025-05-24T21:45:46.052+06:00  INFO 39530 --- [    Test worker] c.e.s.integration.S3IntegrationTest      : LocalStack container is still running. Testcontainers will manage its shutdown.
+</pre>
+</span>
+</div>
+</div>
+<div id="footer">
+<p>
+<div>
+<label class="hidden" id="label-for-line-wrapping-toggle" for="line-wrapping-toggle">Wrap lines
+<input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
+</label>
+</div>Generated by 
+<a href="https://www.gradle.org">Gradle 8.13</a> at May 24, 2025, 9:45:46 PM</p>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="S3 Integration Tests with Testcontainers" tests="3" skipped="0" failures="0" errors="0" timestamp="2025-05-24T15:45:45.506Z" hostname="Mac.lan" time="0.542">
+  <properties/>
+  <testcase name="Should download an object from S3" classname="com.exabyting.springosk.integration.S3IntegrationTest" time="0.49"/>
+  <testcase name="Should upload an object to S3" classname="com.exabyting.springosk.integration.S3IntegrationTest" time="0.02"/>
+  <testcase name="Should delete an object from S3" classname="com.exabyting.springosk.integration.S3IntegrationTest" time="0.031"/>
+  <system-out><![CDATA[2025-05-24T21:45:42.894+06:00  INFO 39530 --- [    Test worker] tc.localstack/localstack:latest          : LOCALSTACK_HOST environment variable set to localhost (to match host-routable address for container)
+2025-05-24T21:45:42.894+06:00  INFO 39530 --- [    Test worker] tc.localstack/localstack:latest          : Creating container for image: localstack/localstack:latest
+2025-05-24T21:45:43.071+06:00  INFO 39530 --- [    Test worker] tc.localstack/localstack:latest          : Container localstack/localstack:latest is starting: b8c951e7487ae85dcae095499500bb288bf13d7d4d95f852a08c8375d5a04bb7
+2025-05-24T21:45:45.431+06:00  INFO 39530 --- [    Test worker] tc.localstack/localstack:latest          : Container localstack/localstack:latest started in PT2.537643S
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.5.0)
+
+2025-05-24T21:45:45.480+06:00  INFO 39530 --- [    Test worker] c.e.s.integration.S3IntegrationTest      : Starting S3IntegrationTest using Java 21.0.5 with PID 39530 (started by sadmansakib in /Users/sadmansakib/workspace/exabyting/spring-object-storage-kit)
+2025-05-24T21:45:45.480+06:00  INFO 39530 --- [    Test worker] c.e.s.integration.S3IntegrationTest      : No active profile set, falling back to 1 default profile: "default"
+2025-05-24T21:45:45.505+06:00  INFO 39530 --- [    Test worker] c.e.s.integration.S3IntegrationTest      : Started S3IntegrationTest in 0.048 seconds (process running for 7.476)
+2025-05-24T21:45:45.956+06:00  INFO 39530 --- [    Test worker] c.e.s.integration.S3IntegrationTest      : Starting S3 cleanup for bucket: test-bucket-1748101542891
+2025-05-24T21:45:45.991+06:00  INFO 39530 --- [    Test worker] c.e.s.integration.S3IntegrationTest      : Successfully deleted 1 objects from bucket: test-bucket-1748101542891
+2025-05-24T21:45:45.995+06:00  INFO 39530 --- [    Test worker] c.e.s.integration.S3IntegrationTest      : Successfully deleted bucket: test-bucket-1748101542891
+2025-05-24T21:45:46.009+06:00  INFO 39530 --- [    Test worker] c.e.s.integration.S3IntegrationTest      : Starting S3 cleanup for bucket: test-bucket-1748101542891
+2025-05-24T21:45:46.015+06:00  INFO 39530 --- [    Test worker] c.e.s.integration.S3IntegrationTest      : Successfully deleted 1 objects from bucket: test-bucket-1748101542891
+2025-05-24T21:45:46.017+06:00  INFO 39530 --- [    Test worker] c.e.s.integration.S3IntegrationTest      : Successfully deleted bucket: test-bucket-1748101542891
+2025-05-24T21:45:46.043+06:00  INFO 39530 --- [    Test worker] c.e.s.integration.S3IntegrationTest      : Starting S3 cleanup for bucket: test-bucket-1748101542891
+2025-05-24T21:45:46.046+06:00  INFO 39530 --- [    Test worker] c.e.s.integration.S3IntegrationTest      : No objects found in bucket test-bucket-1748101542891 to delete.
+2025-05-24T21:45:46.047+06:00  INFO 39530 --- [    Test worker] c.e.s.integration.S3IntegrationTest      : Successfully deleted bucket: test-bucket-1748101542891
+2025-05-24T21:45:46.052+06:00  INFO 39530 --- [    Test worker] c.e.s.integration.S3IntegrationTest      : LocalStack container is still running. Testcontainers will manage its shutdown.
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

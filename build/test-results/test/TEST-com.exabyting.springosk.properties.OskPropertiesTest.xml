@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="OskProperties Tests" tests="16" skipped="0" failures="0" errors="0" timestamp="2025-05-24T15:45:38.655Z" hostname="Mac.lan" time="7.557">
+  <properties/>
+  <testcase name="Should properly set and get storage type" classname="com.exabyting.springosk.properties.OskPropertiesTest" time="0.239"/>
+  <testcase name="Should handle equals and hashCode methods" classname="com.exabyting.springosk.properties.OskPropertiesTest" time="0.003"/>
+  <testcase name="Should fail validation when required fields are null" classname="com.exabyting.springosk.properties.OskPropertiesTest" time="0.053"/>
+  <testcase name="Should handle toString method" classname="com.exabyting.springosk.properties.OskPropertiesTest" time="0.007"/>
+  <testcase name="Should validate successfully with all required fields set" classname="com.exabyting.springosk.properties.OskPropertiesTest" time="0.006"/>
+  <testcase name="Should fail validation when storage type is null" classname="com.exabyting.springosk.properties.OskPropertiesTest" time="0.006"/>
+  <testcase name="Should pass validation with valid S3 storage type" classname="com.exabyting.springosk.properties.OskPropertiesTest" time="0.005"/>
+  <testcase name="Should pass validation with valid Minio storage type" classname="com.exabyting.springosk.properties.OskPropertiesTest" time="0.005"/>
+  <testcase name="Should properly set and get storage type" classname="com.exabyting.springosk.properties.OskPropertiesTest" time="0.002"/>
+  <testcase name="Should handle equals and hashCode methods" classname="com.exabyting.springosk.properties.OskPropertiesTest" time="0.002"/>
+  <testcase name="Should fail validation when required fields are null" classname="com.exabyting.springosk.properties.OskPropertiesTest" time="0.008"/>
+  <testcase name="Should handle toString method" classname="com.exabyting.springosk.properties.OskPropertiesTest" time="0.002"/>
+  <testcase name="Should validate successfully with all required fields set" classname="com.exabyting.springosk.properties.OskPropertiesTest" time="0.005"/>
+  <testcase name="Should fail validation when storage type is null" classname="com.exabyting.springosk.properties.OskPropertiesTest" time="0.004"/>
+  <testcase name="Should pass validation with valid S3 storage type" classname="com.exabyting.springosk.properties.OskPropertiesTest" time="0.003"/>
+  <testcase name="Should pass validation with valid Minio storage type" classname="com.exabyting.springosk.properties.OskPropertiesTest" time="0.007"/>
+  <system-out><![CDATA[21:45:38.784 [Test worker] INFO org.hibernate.validator.internal.util.Version -- HV000001: Hibernate Validator 8.0.2.Final
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
