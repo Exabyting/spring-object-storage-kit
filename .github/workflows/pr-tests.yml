@@ -34,7 +34,7 @@ jobs:
       
     - name: Run tests
       run: ./gradlew test --tests "com.exabyting.springosk.*"
-
+      
     - name: Generate test report
       uses: dorny/test-reporter@v1
       if: success() || failure()
