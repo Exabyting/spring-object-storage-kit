@@ -6,7 +6,6 @@ import io.minio.ListObjectsArgs;
 import io.minio.MakeBucketArgs;
 import io.minio.MinioClient;
 import io.minio.RemoveBucketArgs;
-import io.minio.RemoveObjectArgs;
 import io.minio.Result;
 import io.minio.messages.Bucket;
 import io.minio.messages.Item;
@@ -16,7 +15,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.ZonedDateTime;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -25,8 +23,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import org.junit.jupiter.api.DisplayName;
-import org.mockito.InOrder;
-import java.util.Iterator;
 
 @ExtendWith(MockitoExtension.class)
 class MinIOBucketOperationsTest {

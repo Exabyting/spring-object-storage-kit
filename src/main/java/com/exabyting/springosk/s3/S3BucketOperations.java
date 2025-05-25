@@ -37,8 +37,9 @@ public class S3BucketOperations implements BucketOperations {
     @Override
     public Boolean create(@Nonnull String bucketName) {
         try {
-            if (bucketName.isEmpty()) {
-                throw new IllegalArgumentException("Bucket name cannot be null or empty");
+            if (bucketName.isBlank()) {
+                log.warn("Bucket name cannot be null or empty");
+                return false;
             }
             log.info("Creating S3 bucket: {}", bucketName);
             CreateBucketRequest createBucketRequest = CreateBucketRequest.builder()
@@ -52,15 +53,16 @@ public class S3BucketOperations implements BucketOperations {
             throw new BucketOperationException("Failed to create S3 bucket: " + bucketName, e);
         } catch (Exception e) {
             log.error("Unexpected error while creating S3 bucket '{}': {}", bucketName, e.getMessage(), e);
-            throw new BucketOperationException("Unexpected error while creating S3 bucket: " + bucketName, e);
+            throw new BucketOperationException("Failed to create S3 bucket: " + bucketName, e);
         }
     }
 
     @Override
     public Boolean delete(@Nonnull String bucketName) {
         try {
-            if (bucketName.isBlank()) {
-                throw new IllegalArgumentException("Bucket name cannot be null or empty");
+            if (bucketName == null || bucketName.isBlank()) {
+                log.warn("Bucket name cannot be null or empty");
+                return false;
             }
             log.info("Deleting S3 bucket: {}", bucketName);
             // First, delete all objects in the bucket
@@ -75,10 +77,10 @@ public class S3BucketOperations implements BucketOperations {
             return true;
         } catch (S3Exception e) {
             log.error("Failed to delete S3 bucket '{}': {}", bucketName, e.getMessage(), e);
-            return false;
+            throw new BucketOperationException("Failed to delete S3 bucket: " + bucketName, e);
         } catch (Exception e) {
             log.error("Unexpected error while deleting S3 bucket '{}': {}", bucketName, e.getMessage(), e);
-            return false;
+            throw new BucketOperationException("Failed to delete S3 bucket: " + bucketName, e);
         }
     }
 
@@ -97,17 +99,18 @@ public class S3BucketOperations implements BucketOperations {
             return bucketNames;
         } catch (S3Exception e) {
             log.error("Failed to list S3 buckets: {}", e.getMessage(), e);
-            return List.of();
+            throw new BucketOperationException("Failed to list S3 buckets", e);
         } catch (Exception e) {
             log.error("Unexpected error while listing S3 buckets: {}", e.getMessage(), e);
-            return List.of();
+            throw new BucketOperationException("Failed to list S3 buckets", e);
         }
     }
 
     private void deleteAllObjectsInBucket(@Nonnull String bucketName) {
         try {
-            if (bucketName.isBlank()) {
-                throw new IllegalArgumentException("Bucket name cannot be null or empty");
+            if (bucketName == null || bucketName.isBlank()) {
+                log.warn("Bucket name cannot be null or empty");
+                return;
             }
             log.debug("Deleting all objects in bucket: {}", bucketName);
 
