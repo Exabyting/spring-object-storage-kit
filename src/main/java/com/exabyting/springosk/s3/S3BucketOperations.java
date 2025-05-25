@@ -1,5 +1,7 @@
 package com.exabyting.springosk.s3;
 
+import com.exabyting.springosk.exception.BucketOperationException;
+import jakarta.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -33,8 +35,11 @@ public class S3BucketOperations implements BucketOperations {
     private final S3Client s3Client;
 
     @Override
-    public Boolean create(String bucketName) {
+    public Boolean create(@Nonnull String bucketName) {
         try {
+            if (bucketName.isEmpty()) {
+                throw new IllegalArgumentException("Bucket name cannot be null or empty");
+            }
             log.info("Creating S3 bucket: {}", bucketName);
             CreateBucketRequest createBucketRequest = CreateBucketRequest.builder()
                     .bucket(bucketName)
@@ -44,21 +49,23 @@ public class S3BucketOperations implements BucketOperations {
             return true;
         } catch (S3Exception e) {
             log.error("Failed to create S3 bucket '{}': {}", bucketName, e.getMessage(), e);
-            return false;
+            throw new BucketOperationException("Failed to create S3 bucket: " + bucketName, e);
         } catch (Exception e) {
             log.error("Unexpected error while creating S3 bucket '{}': {}", bucketName, e.getMessage(), e);
-            return false;
+            throw new BucketOperationException("Unexpected error while creating S3 bucket: " + bucketName, e);
         }
     }
 
     @Override
-    public Boolean delete(String bucketName) {
+    public Boolean delete(@Nonnull String bucketName) {
         try {
+            if (bucketName.isBlank()) {
+                throw new IllegalArgumentException("Bucket name cannot be null or empty");
+            }
             log.info("Deleting S3 bucket: {}", bucketName);
-            
             // First, delete all objects in the bucket
             deleteAllObjectsInBucket(bucketName);
-            
+
             // Then delete the bucket itself
             DeleteBucketRequest deleteBucketRequest = DeleteBucketRequest.builder()
                     .bucket(bucketName)
@@ -81,11 +88,11 @@ public class S3BucketOperations implements BucketOperations {
             log.debug("Listing all S3 buckets");
             ListBucketsRequest listBucketsRequest = ListBucketsRequest.builder().build();
             ListBucketsResponse listBucketsResponse = s3Client.listBuckets(listBucketsRequest);
-            
+
             List<String> bucketNames = listBucketsResponse.buckets().stream()
                     .map(Bucket::name)
                     .collect(Collectors.toList());
-            
+
             log.debug("Found {} S3 buckets", bucketNames.size());
             return bucketNames;
         } catch (S3Exception e) {
@@ -97,17 +104,20 @@ public class S3BucketOperations implements BucketOperations {
         }
     }
 
-    private void deleteAllObjectsInBucket(String bucketName) {
+    private void deleteAllObjectsInBucket(@Nonnull String bucketName) {
         try {
+            if (bucketName.isBlank()) {
+                throw new IllegalArgumentException("Bucket name cannot be null or empty");
+            }
             log.debug("Deleting all objects in bucket: {}", bucketName);
-            
+
             ListObjectsV2Request listObjectsV2Request = ListObjectsV2Request.builder()
                     .bucket(bucketName)
                     .build();
-            
+
             ListObjectsV2Response listObjectsV2Response;
             List<ObjectIdentifier> objectsToDelete = new ArrayList<>();
-            
+
             do {
                 listObjectsV2Response = s3Client.listObjectsV2(listObjectsV2Request);
                 for (S3Object s3Object : listObjectsV2Response.contents()) {

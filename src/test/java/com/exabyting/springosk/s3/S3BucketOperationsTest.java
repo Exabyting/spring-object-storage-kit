@@ -1,5 +1,6 @@
 package com.exabyting.springosk.s3;
 
+import com.exabyting.springosk.exception.BucketOperationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -27,9 +28,7 @@ import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.doThrow;
@@ -74,21 +73,19 @@ class S3BucketOperationsTest {
     }
 
     @Test
-    @DisplayName("Should return false when S3Exception occurs during bucket creation")
-    void shouldReturnFalseWhenS3ExceptionOccursDuringBucketCreation() {
+    @DisplayName("Should throw exception when S3Exception occurs during bucket creation")
+    void shouldThrowExWhenS3ExceptionOccursDuringBucketCreation() {
         // Given
-        S3Exception s3Exception = (S3Exception) S3Exception.builder()
+         var s3Exception = (S3Exception) S3Exception.builder()
             .message("Bucket already exists")
             .statusCode(409)
             .build();
         when(s3Client.createBucket(any(CreateBucketRequest.class))).thenThrow(s3Exception);
 
-        // When
-        Boolean result = s3BucketOperations.create(TEST_BUCKET_NAME);
-
-        // Then
-        assertFalse(result);
-        verify(s3Client).createBucket(any(CreateBucketRequest.class));
+        assertThrows(BucketOperationException.class, () -> {
+            // When
+            s3BucketOperations.create(TEST_BUCKET_NAME);
+        });
     }
 
     @Test
