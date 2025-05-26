@@ -1,5 +1,6 @@
 package com.exabyting.springosk.s3;
 
+import com.exabyting.springosk.exception.BucketOperationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -7,36 +8,16 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import software.amazon.awssdk.services.s3.S3Client;
-import software.amazon.awssdk.services.s3.model.Bucket;
-import software.amazon.awssdk.services.s3.model.CreateBucketRequest;
-import software.amazon.awssdk.services.s3.model.CreateBucketResponse;
-import software.amazon.awssdk.services.s3.model.Delete;
-import software.amazon.awssdk.services.s3.model.DeleteBucketRequest;
-import software.amazon.awssdk.services.s3.model.DeleteBucketResponse;
-import software.amazon.awssdk.services.s3.model.DeleteObjectsRequest;
-import software.amazon.awssdk.services.s3.model.DeleteObjectsResponse;
-import software.amazon.awssdk.services.s3.model.ListBucketsRequest;
-import software.amazon.awssdk.services.s3.model.ListBucketsResponse;
-import software.amazon.awssdk.services.s3.model.ListObjectsV2Request;
-import software.amazon.awssdk.services.s3.model.ListObjectsV2Response;
-import software.amazon.awssdk.services.s3.model.ObjectIdentifier;
-import software.amazon.awssdk.services.s3.model.S3Exception;
-import software.amazon.awssdk.services.s3.model.S3Object;
+import software.amazon.awssdk.services.s3.model.*;
 
 import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("S3BucketOperations Unit Tests")
@@ -74,35 +55,30 @@ class S3BucketOperationsTest {
     }
 
     @Test
-    @DisplayName("Should return false when S3Exception occurs during bucket creation")
-    void shouldReturnFalseWhenS3ExceptionOccursDuringBucketCreation() {
+    @DisplayName("Should throw exception when S3Exception occurs during bucket creation")
+    void shouldThrowExWhenS3ExceptionOccursDuringBucketCreation() {
         // Given
-        S3Exception s3Exception = (S3Exception) S3Exception.builder()
+         var s3Exception = (S3Exception) S3Exception.builder()
             .message("Bucket already exists")
             .statusCode(409)
             .build();
         when(s3Client.createBucket(any(CreateBucketRequest.class))).thenThrow(s3Exception);
 
-        // When
-        Boolean result = s3BucketOperations.create(TEST_BUCKET_NAME);
-
-        // Then
-        assertFalse(result);
-        verify(s3Client).createBucket(any(CreateBucketRequest.class));
+        assertThrows(BucketOperationException.class, () -> {
+            // When
+            s3BucketOperations.create(TEST_BUCKET_NAME);
+        });
     }
 
     @Test
-    @DisplayName("Should return false when general exception occurs during bucket creation")
-    void shouldReturnFalseWhenGeneralExceptionOccursDuringBucketCreation() {
+    @DisplayName("Should throw exception when general exception occurs during bucket creation")
+    void shouldThrowExceptionWhenGeneralExceptionOccursDuringBucketCreation() {
         // Given
         RuntimeException runtimeException = new RuntimeException("Network error");
         when(s3Client.createBucket(any(CreateBucketRequest.class))).thenThrow(runtimeException);
 
-        // When
-        Boolean result = s3BucketOperations.create(TEST_BUCKET_NAME);
-
-        // Then
-        assertFalse(result);
+        // When & Then
+        assertThrows(BucketOperationException.class, () -> s3BucketOperations.create(TEST_BUCKET_NAME));
         verify(s3Client).createBucket(any(CreateBucketRequest.class));
     }
 
@@ -233,8 +209,8 @@ class S3BucketOperationsTest {
     }
 
     @Test
-    @DisplayName("Should return false when S3Exception occurs during bucket deletion")
-    void shouldReturnFalseWhenS3ExceptionOccursDuringBucketDeletion() {
+    @DisplayName("Should throw exception when S3Exception occurs during bucket deletion")
+    void shouldThrowExceptionWhenS3ExceptionOccursDuringBucketDeletion() {
         // Given
         ListObjectsV2Response emptyListResponse = ListObjectsV2Response.builder()
             .isTruncated(false)
@@ -248,17 +224,14 @@ class S3BucketOperationsTest {
             .build();
         when(s3Client.deleteBucket(any(DeleteBucketRequest.class))).thenThrow(s3Exception);
 
-        // When
-        Boolean result = s3BucketOperations.delete(TEST_BUCKET_NAME);
-
-        // Then
-        assertFalse(result);
+        // When & Then
+        assertThrows(BucketOperationException.class, () -> s3BucketOperations.delete(TEST_BUCKET_NAME));
         verify(s3Client).deleteBucket(any(DeleteBucketRequest.class));
     }
 
     @Test
-    @DisplayName("Should return false when general exception occurs during bucket deletion")
-    void shouldReturnFalseWhenGeneralExceptionOccursDuringBucketDeletion() {
+    @DisplayName("Should throw exception when general exception occurs during bucket deletion")
+    void shouldThrowExceptionWhenGeneralExceptionOccursDuringBucketDeletion() {
         // Given
         ListObjectsV2Response emptyListResponse = ListObjectsV2Response.builder()
             .isTruncated(false)
@@ -269,11 +242,8 @@ class S3BucketOperationsTest {
         RuntimeException runtimeException = new RuntimeException("Network error");
         when(s3Client.deleteBucket(any(DeleteBucketRequest.class))).thenThrow(runtimeException);
 
-        // When
-        Boolean result = s3BucketOperations.delete(TEST_BUCKET_NAME);
-
-        // Then
-        assertFalse(result);
+        // When & Then
+        assertThrows(BucketOperationException.class, () -> s3BucketOperations.delete(TEST_BUCKET_NAME));
         verify(s3Client).deleteBucket(any(DeleteBucketRequest.class));
     }
 
@@ -431,8 +401,8 @@ class S3BucketOperationsTest {
     }
 
     @Test
-    @DisplayName("Should return empty list when S3Exception occurs during bucket listing")
-    void shouldReturnEmptyListWhenS3ExceptionOccursDuringBucketListing() {
+    @DisplayName("Should throw exception when S3Exception occurs during bucket listing")
+    void shouldThrowExceptionWhenS3ExceptionOccursDuringBucketListing() {
         // Given
         S3Exception s3Exception = (S3Exception) S3Exception.builder()
             .message("Access denied")
@@ -440,86 +410,48 @@ class S3BucketOperationsTest {
             .build();
         when(s3Client.listBuckets(any(ListBucketsRequest.class))).thenThrow(s3Exception);
 
-        // When
-        Collection<String> result = s3BucketOperations.getAllBuckets();
-
-        // Then
-        assertTrue(result.isEmpty());
+        // When & Then
+        assertThrows(BucketOperationException.class, () -> s3BucketOperations.getAllBuckets());
         verify(s3Client).listBuckets(any(ListBucketsRequest.class));
     }
 
     @Test
-    @DisplayName("Should return empty list when general exception occurs during bucket listing")
-    void shouldReturnEmptyListWhenGeneralExceptionOccursDuringBucketListing() {
+    @DisplayName("Should throw exception when general exception occurs during bucket listing")
+    void shouldThrowExceptionWhenGeneralExceptionOccursDuringBucketListing() {
         // Given
         RuntimeException runtimeException = new RuntimeException("Network error");
         when(s3Client.listBuckets(any(ListBucketsRequest.class))).thenThrow(runtimeException);
 
-        // When
-        Collection<String> result = s3BucketOperations.getAllBuckets();
-
-        // Then
-        assertTrue(result.isEmpty());
+        // When & Then
+        assertThrows(BucketOperationException.class, () -> s3BucketOperations.getAllBuckets());
         verify(s3Client).listBuckets(any(ListBucketsRequest.class));
     }
 
     @Test
     @DisplayName("Should handle null bucket name gracefully in create operation")
     void shouldHandleNullBucketNameGracefullyInCreateOperation() {
-        // Given
-        when(s3Client.createBucket(any(CreateBucketRequest.class)))
-            .thenThrow(new RuntimeException("Invalid bucket name"));
-
-        // When
-        Boolean result = s3BucketOperations.create(null);
-
-        // Then
-        assertFalse(result);
+        // When & Then
+        assertThrows(BucketOperationException.class, () -> s3BucketOperations.create(null));
     }
 
     @Test
     @DisplayName("Should handle null bucket name gracefully in delete operation")
     void shouldHandleNullBucketNameGracefullyInDeleteOperation() {
-        // Given
-        when(s3Client.listObjectsV2(any(ListObjectsV2Request.class)))
-            .thenThrow(new RuntimeException("Invalid bucket name"));
-        when(s3Client.deleteBucket(any(DeleteBucketRequest.class)))
-            .thenThrow(new RuntimeException("Invalid bucket name"));
-
-        // When
-        Boolean result = s3BucketOperations.delete(null);
-
-        // Then
-        assertFalse(result);
+        // When & Then
+        assertThrows(BucketOperationException.class, () -> s3BucketOperations.delete(null));
     }
 
     @Test
     @DisplayName("Should handle empty bucket name gracefully in create operation")
     void shouldHandleEmptyBucketNameGracefullyInCreateOperation() {
-        // Given
-        when(s3Client.createBucket(any(CreateBucketRequest.class)))
-            .thenThrow(new RuntimeException("Invalid bucket name"));
-
-        // When
-        Boolean result = s3BucketOperations.create("");
-
-        // Then
-        assertFalse(result);
+        // When & Then
+        assertThrows(BucketOperationException.class, () -> s3BucketOperations.create(""));
     }
 
     @Test
     @DisplayName("Should handle empty bucket name gracefully in delete operation")
     void shouldHandleEmptyBucketNameGracefullyInDeleteOperation() {
-        // Given
-        when(s3Client.listObjectsV2(any(ListObjectsV2Request.class)))
-            .thenThrow(new RuntimeException("Invalid bucket name"));
-        when(s3Client.deleteBucket(any(DeleteBucketRequest.class)))
-            .thenThrow(new RuntimeException("Invalid bucket name"));
-
-        // When
-        Boolean result = s3BucketOperations.delete("");
-
-        // Then
-        assertFalse(result);
+        // When & Then
+        assertThrows(BucketOperationException.class, () -> s3BucketOperations.delete(""));
     }
 }

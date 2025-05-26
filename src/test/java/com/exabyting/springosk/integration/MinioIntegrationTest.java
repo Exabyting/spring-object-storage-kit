@@ -1,12 +1,12 @@
 package com.exabyting.springosk.integration;
 
+import com.exabyting.springosk.config.MinioConfig;
+import com.exabyting.springosk.config.PropertiesConfig;
+import com.exabyting.springosk.properties.OskProperties;
+import io.minio.*;
+import io.minio.messages.Item;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.DynamicPropertyRegistry;
@@ -15,19 +15,6 @@ import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
-import com.exabyting.springosk.config.MinioConfig;
-import com.exabyting.springosk.config.PropertiesConfig;
-import com.exabyting.springosk.properties.OskProperties;
-import io.minio.MinioClient;
-import io.minio.MakeBucketArgs;
-import io.minio.RemoveBucketArgs;
-import io.minio.ListObjectsArgs;
-import io.minio.RemoveObjectArgs;
-import io.minio.PutObjectArgs;
-import io.minio.GetObjectArgs;
-import io.minio.StatObjectArgs;
-import io.minio.Result;
-import io.minio.messages.Item;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -35,10 +22,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @Testcontainers
 @SpringBootTest(classes = {MinioConfig.class, PropertiesConfig.class}) // Ensure MinioConfig and OskProperties are loaded
@@ -186,14 +170,12 @@ class MinioIntegrationTest {
         );
 
         // Verify object is deleted (trying to get object stat should fail)
-        assertThrows(Exception.class, () -> {
-            minioClient.statObject(
+        assertThrows(Exception.class, () -> minioClient.statObject(
                 StatObjectArgs.builder()
-                    .bucket(TEST_BUCKET_NAME)
-                    .object(TEST_OBJECT_KEY)
-                    .build()
-            );
-        }, "Getting a deleted object stat should throw an exception.");
+                        .bucket(TEST_BUCKET_NAME)
+                        .object(TEST_OBJECT_KEY)
+                        .build()
+        ), "Getting a deleted object stat should throw an exception.");
     }
 
     @AfterEach
@@ -214,18 +196,26 @@ class MinioIntegrationTest {
             );
             
             for (Result<Item> result : results) {
-                Item item = result.get();
-                objectsToDelete.add(item.objectName());
+                try {
+                    Item item = result.get();
+                    objectsToDelete.add(item.objectName());
+                } catch (Exception e) {
+                    log.warn("Error processing object in bucket {}: {}", TEST_BUCKET_NAME, e.getMessage());
+                }
             }
 
             // Delete all objects
             for (String objectName : objectsToDelete) {
-                minioClient.removeObject(
-                    RemoveObjectArgs.builder()
-                        .bucket(TEST_BUCKET_NAME)
-                        .object(objectName)
-                        .build()
-                );
+                try {
+                    minioClient.removeObject(
+                            RemoveObjectArgs.builder()
+                                    .bucket(TEST_BUCKET_NAME)
+                                    .object(objectName)
+                                    .build()
+                    );
+                } catch (Exception e) {
+                    log.warn("Error deleting object {} from bucket {}: {}", objectName, TEST_BUCKET_NAME, e.getMessage());
+                }
             }
             
             if (!objectsToDelete.isEmpty()) {
@@ -246,13 +236,8 @@ class MinioIntegrationTest {
     
     @AfterAll
     static void afterAll() {
-        // Testcontainers will stop the MinIO container automatically.
-        // Additional static cleanup for the class can be performed here if needed.
-        if (minioContainer != null && minioContainer.isRunning()) {
-            log.info("MinIO container is still running. Testcontainers will manage its shutdown.");
-        } else if (minioContainer != null) {
-            log.info("MinIO container is not running at @AfterAll.");
-        }
-        // Bucket cleanup is handled in @AfterEach for instance-specific resources like minioClient.
+        // Testcontainers automatically manages container lifecycle with @Container annotation
+        // No need to manually stop the container - this can cause shutdown conflicts
+        log.info("Test class completed. Testcontainers will automatically shutdown the MinIO container.");
     }
 }
