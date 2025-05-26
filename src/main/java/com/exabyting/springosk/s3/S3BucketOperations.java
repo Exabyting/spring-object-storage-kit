@@ -1,25 +1,16 @@
 package com.exabyting.springosk.s3;
 
+import com.exabyting.springosk.annotation.ConditionalOnStorageType;
+import com.exabyting.springosk.core.BucketOperations;
 import com.exabyting.springosk.exception.BucketOperationException;
 import jakarta.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 import software.amazon.awssdk.services.s3.S3Client;
-import software.amazon.awssdk.services.s3.model.Bucket;
-import software.amazon.awssdk.services.s3.model.CreateBucketRequest;
-import software.amazon.awssdk.services.s3.model.Delete;
-import software.amazon.awssdk.services.s3.model.DeleteBucketRequest;
-import software.amazon.awssdk.services.s3.model.DeleteObjectsRequest;
-import software.amazon.awssdk.services.s3.model.ListBucketsRequest;
-import software.amazon.awssdk.services.s3.model.ListBucketsResponse;
-import software.amazon.awssdk.services.s3.model.ListObjectsV2Request;
-import software.amazon.awssdk.services.s3.model.ListObjectsV2Response;
-import software.amazon.awssdk.services.s3.model.ObjectIdentifier;
-import software.amazon.awssdk.services.s3.model.S3Exception;
-import software.amazon.awssdk.services.s3.model.S3Object;
-import com.exabyting.springosk.annotation.ConditionalOnStorageType;
-import com.exabyting.springosk.core.BucketOperations;
+import software.amazon.awssdk.services.s3.model.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -37,10 +28,7 @@ public class S3BucketOperations implements BucketOperations {
     @Override
     public Boolean create(@Nonnull String bucketName) {
         try {
-            if (bucketName.isBlank()) {
-                log.warn("Bucket name cannot be null or empty");
-                return false;
-            }
+            validateBucketName(bucketName);
             log.info("Creating S3 bucket: {}", bucketName);
             CreateBucketRequest createBucketRequest = CreateBucketRequest.builder()
                     .bucket(bucketName)
@@ -60,10 +48,7 @@ public class S3BucketOperations implements BucketOperations {
     @Override
     public Boolean delete(@Nonnull String bucketName) {
         try {
-            if (bucketName == null || bucketName.isBlank()) {
-                log.warn("Bucket name cannot be null or empty");
-                return false;
-            }
+            validateBucketName(bucketName);
             log.info("Deleting S3 bucket: {}", bucketName);
             // First, delete all objects in the bucket
             deleteAllObjectsInBucket(bucketName);
@@ -108,10 +93,7 @@ public class S3BucketOperations implements BucketOperations {
 
     private void deleteAllObjectsInBucket(@Nonnull String bucketName) {
         try {
-            if (bucketName == null || bucketName.isBlank()) {
-                log.warn("Bucket name cannot be null or empty");
-                return;
-            }
+            validateBucketName(bucketName);
             log.debug("Deleting all objects in bucket: {}", bucketName);
 
             ListObjectsV2Request listObjectsV2Request = ListObjectsV2Request.builder()
@@ -146,6 +128,13 @@ public class S3BucketOperations implements BucketOperations {
             log.warn("Failed to delete objects in bucket '{}': {}", bucketName, e.getMessage());
         } catch (Exception e) {
             log.warn("Unexpected error while deleting objects in bucket '{}': {}", bucketName, e.getMessage());
+        }
+    }
+
+    private static void validateBucketName(@NotNull String bucketName) {
+        if (StringUtils.isEmpty(bucketName)) {
+            log.warn("Bucket name cannot be null or empty");
+            throw new BucketOperationException("Bucket name cannot be null or empty");
         }
     }
 }

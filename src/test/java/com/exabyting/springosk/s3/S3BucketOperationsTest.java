@@ -8,21 +8,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import software.amazon.awssdk.services.s3.S3Client;
-import software.amazon.awssdk.services.s3.model.Bucket;
-import software.amazon.awssdk.services.s3.model.CreateBucketRequest;
-import software.amazon.awssdk.services.s3.model.CreateBucketResponse;
-import software.amazon.awssdk.services.s3.model.Delete;
-import software.amazon.awssdk.services.s3.model.DeleteBucketRequest;
-import software.amazon.awssdk.services.s3.model.DeleteBucketResponse;
-import software.amazon.awssdk.services.s3.model.DeleteObjectsRequest;
-import software.amazon.awssdk.services.s3.model.DeleteObjectsResponse;
-import software.amazon.awssdk.services.s3.model.ListBucketsRequest;
-import software.amazon.awssdk.services.s3.model.ListBucketsResponse;
-import software.amazon.awssdk.services.s3.model.ListObjectsV2Request;
-import software.amazon.awssdk.services.s3.model.ListObjectsV2Response;
-import software.amazon.awssdk.services.s3.model.ObjectIdentifier;
-import software.amazon.awssdk.services.s3.model.S3Exception;
-import software.amazon.awssdk.services.s3.model.S3Object;
+import software.amazon.awssdk.services.s3.model.*;
 
 import java.time.Instant;
 import java.util.Collection;
@@ -31,10 +17,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("S3BucketOperations Unit Tests")
@@ -448,31 +431,27 @@ class S3BucketOperationsTest {
     @DisplayName("Should handle null bucket name gracefully in create operation")
     void shouldHandleNullBucketNameGracefullyInCreateOperation() {
         // When & Then
-        Boolean result = s3BucketOperations.create(null);
-        assertFalse(result);
+        assertThrows(BucketOperationException.class, () -> s3BucketOperations.create(null));
     }
 
     @Test
     @DisplayName("Should handle null bucket name gracefully in delete operation")
     void shouldHandleNullBucketNameGracefullyInDeleteOperation() {
         // When & Then
-        Boolean result = s3BucketOperations.delete(null);
-        assertFalse(result);
+        assertThrows(BucketOperationException.class, () -> s3BucketOperations.delete(null));
     }
 
     @Test
     @DisplayName("Should handle empty bucket name gracefully in create operation")
     void shouldHandleEmptyBucketNameGracefullyInCreateOperation() {
         // When & Then
-        Boolean result = s3BucketOperations.create("");
-        assertFalse(result);
+        assertThrows(BucketOperationException.class, () -> s3BucketOperations.create(""));
     }
 
     @Test
     @DisplayName("Should handle empty bucket name gracefully in delete operation")
     void shouldHandleEmptyBucketNameGracefullyInDeleteOperation() {
         // When & Then
-        Boolean result = s3BucketOperations.delete("");
-        assertFalse(result);
+        assertThrows(BucketOperationException.class, () -> s3BucketOperations.delete(""));
     }
 }
