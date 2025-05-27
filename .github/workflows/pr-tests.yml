@@ -5,6 +5,11 @@ on:
     branches: [ main ]
     types: [ opened, synchronize, reopened ]
 
+permissions:
+  contents: read
+  pull-requests: write
+  checks: write
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -32,8 +37,36 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
       
-    - name: Run tests
-      run: ./gradlew test --tests "com.exabyting.springosk.*"
+    - name: Run tests with coverage
+      run: ./gradlew clean test jacocoTestReport
+
+    - name: Verify coverage threshold
+      run: ./gradlew jacocoTestCoverageVerification
+      continue-on-error: true
+
+    - name: Generate coverage summary for PR
+      id: coverage
+      run: |
+        if [ -f "build/reports/jacoco/test/jacocoTestReport.xml" ]; then
+          JACOCO_REPORT="build/reports/jacoco/test/jacocoTestReport.xml"
+        
+          # Extract instruction coverage
+          INSTRUCTION_MISSED=$(grep 'type="INSTRUCTION"' "$JACOCO_REPORT" | grep -o 'missed="[0-9]*"' | tail -1 | grep -o '[0-9]*')
+          INSTRUCTION_COVERED=$(grep 'type="INSTRUCTION"' "$JACOCO_REPORT" | grep -o 'covered="[0-9]*"' | tail -1 | grep -o '[0-9]*')
+        
+          if [ -n "$INSTRUCTION_MISSED" ] && [ -n "$INSTRUCTION_COVERED" ]; then
+            TOTAL_INSTRUCTIONS=$((INSTRUCTION_MISSED + INSTRUCTION_COVERED))
+            INSTRUCTION_PERCENT=$((INSTRUCTION_COVERED * 100 / TOTAL_INSTRUCTIONS))
+            echo "coverage_percent=$INSTRUCTION_PERCENT" >> $GITHUB_OUTPUT
+            echo "Coverage generated: $INSTRUCTION_PERCENT%"
+          else
+            echo "Could not parse coverage data"
+            echo "coverage_percent=0" >> $GITHUB_OUTPUT
+          fi
+        else
+          echo "No coverage report found"
+          echo "coverage_percent=0" >> $GITHUB_OUTPUT
+        fi
       
     - name: Generate test report
       uses: dorny/test-reporter@v1
@@ -43,11 +76,53 @@ jobs:
         path: build/test-results/test/*.xml
         reporter: java-junit
         
-    - name: Upload test results
+    - name: Add coverage to PR
+      id: jacoco
+      uses: madrapps/jacoco-report@v1.6.1
+      if: github.event_name == 'pull_request' && always()
+      with:
+        paths: |
+          ${{ github.workspace }}/build/reports/jacoco/test/jacocoTestReport.xml
+        token: ${{ secrets.GITHUB_TOKEN }}
+        min-coverage-overall: 70
+        min-coverage-changed-files: 80
+        title: 📊 Test Coverage Report
+        update-comment: true
+        pass-emoji: '✅'
+        fail-emoji: '❌'
+
+    - name: Coverage Summary Comment
+      uses: actions/github-script@v7
+      if: github.event_name == 'pull_request' && always()
+      with:
+        script: |
+          const coverage = '${{ steps.coverage.outputs.coverage_percent }}';
+          const threshold = 70;
+          const status = coverage >= threshold ? '✅' : '❌';
+          const color = coverage >= 80 ? '🟢' : coverage >= 70 ? '🟡' : '🔴';
+          
+          const body = `## ${status} Coverage Summary
+          
+          ${color} **Overall Coverage**: ${coverage}%
+          
+          - **Threshold**: ${threshold}% (${coverage >= threshold ? 'PASSING' : 'FAILING'})
+          - **Goal**: 80%+ for new code
+          
+          📊 Detailed coverage report will be available in the checks above.`;
+          
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: body
+          });
+
+    - name: Upload test and coverage results
       uses: actions/upload-artifact@v4
       if: always()
       with:
-        name: test-results
+        name: test-and-coverage-results
         path: |
           build/test-results/
           build/reports/tests/
+          build/reports/jacoco/

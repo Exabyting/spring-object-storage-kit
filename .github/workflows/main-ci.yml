@@ -1,0 +1,190 @@
+name: Main Branch CI/CD
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+  pull-requests: write
+
+jobs:
+  test-and-coverage:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Cache Gradle packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Grant execute permission for update script
+        run: chmod +x scripts/update-coverage-badge.sh
+
+      - name: Run tests with coverage
+        run: ./gradlew clean test jacocoTestReport
+
+      - name: Verify coverage threshold
+        run: ./gradlew jacocoTestCoverageVerification
+        continue-on-error: true
+
+      - name: Update coverage badge
+        run: ./scripts/update-coverage-badge.sh
+
+      - name: Generate coverage summary
+        id: coverage
+        run: |
+          # Extract coverage percentage from JaCoCo XML report
+          JACOCO_REPORT="build/reports/jacoco/test/jacocoTestReport.xml"
+          
+          if [ ! -f "$JACOCO_REPORT" ]; then
+            echo "Error: JaCoCo report not found at $JACOCO_REPORT"
+            exit 1
+          fi
+          
+          # Extract instruction coverage (overall summary)
+          INSTRUCTION_MISSED=$(grep 'type="INSTRUCTION"' "$JACOCO_REPORT" | grep -o 'missed="[0-9]*"' | tail -1 | grep -o '[0-9]*')
+          INSTRUCTION_COVERED=$(grep 'type="INSTRUCTION"' "$JACOCO_REPORT" | grep -o 'covered="[0-9]*"' | tail -1 | grep -o '[0-9]*')
+          
+          # Extract branch coverage
+          BRANCH_MISSED=$(grep 'type="BRANCH"' "$JACOCO_REPORT" | grep -o 'missed="[0-9]*"' | tail -1 | grep -o '[0-9]*')
+          BRANCH_COVERED=$(grep 'type="BRANCH"' "$JACOCO_REPORT" | grep -o 'covered="[0-9]*"' | tail -1 | grep -o '[0-9]*')
+          
+          # Extract line coverage
+          LINE_MISSED=$(grep 'type="LINE"' "$JACOCO_REPORT" | grep -o 'missed="[0-9]*"' | tail -1 | grep -o '[0-9]*')
+          LINE_COVERED=$(grep 'type="LINE"' "$JACOCO_REPORT" | grep -o 'covered="[0-9]*"' | tail -1 | grep -o '[0-9]*')
+          
+          # Calculate percentages
+          TOTAL_INSTRUCTIONS=$((INSTRUCTION_MISSED + INSTRUCTION_COVERED))
+          INSTRUCTION_PERCENT=$((INSTRUCTION_COVERED * 100 / TOTAL_INSTRUCTIONS))
+          
+          TOTAL_BRANCHES=$((BRANCH_MISSED + BRANCH_COVERED))
+          BRANCH_PERCENT=0
+          if [ "$TOTAL_BRANCHES" -gt 0 ]; then
+            BRANCH_PERCENT=$((BRANCH_COVERED * 100 / TOTAL_BRANCHES))
+          fi
+          
+          TOTAL_LINES=$((LINE_MISSED + LINE_COVERED))
+          LINE_PERCENT=0
+          if [ "$TOTAL_LINES" -gt 0 ]; then
+            LINE_PERCENT=$((LINE_COVERED * 100 / TOTAL_LINES))
+          fi
+          
+          # Set outputs
+          echo "coverage_percent=$INSTRUCTION_PERCENT" >> $GITHUB_OUTPUT
+          echo "branch_percent=$BRANCH_PERCENT" >> $GITHUB_OUTPUT
+          echo "line_percent=$LINE_PERCENT" >> $GITHUB_OUTPUT
+          echo "total_instructions=$TOTAL_INSTRUCTIONS" >> $GITHUB_OUTPUT
+          echo "covered_instructions=$INSTRUCTION_COVERED" >> $GITHUB_OUTPUT
+          echo "total_branches=$TOTAL_BRANCHES" >> $GITHUB_OUTPUT
+          echo "covered_branches=$BRANCH_COVERED" >> $GITHUB_OUTPUT
+          echo "total_lines=$TOTAL_LINES" >> $GITHUB_OUTPUT
+          echo "covered_lines=$LINE_COVERED" >> $GITHUB_OUTPUT
+          
+          # Create coverage summary for commit message
+          echo "Test Coverage: $INSTRUCTION_PERCENT% instruction, $BRANCH_PERCENT% branch, $LINE_PERCENT% line" > coverage_summary.txt
+
+      - name: Check for changes
+        id: git-check
+        run: |
+          git diff --exit-code README.md || echo "changes=true" >> $GITHUB_OUTPUT
+
+      - name: Commit and push coverage badge updates
+        if: steps.git-check.outputs.changes == 'true'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add README.md
+          git commit -m "Update coverage badge to ${{ steps.coverage.outputs.coverage_percent }}% [skip ci]"
+          git push
+
+      - name: Upload coverage reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-reports
+          path: |
+            build/reports/jacoco/
+            build/test-results/
+
+      - name: Comment coverage on commit
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const instructionCoverage = '${{ steps.coverage.outputs.coverage_percent }}';
+            const branchCoverage = '${{ steps.coverage.outputs.branch_percent }}';
+            const lineCoverage = '${{ steps.coverage.outputs.line_percent }}';
+            const totalInstructions = '${{ steps.coverage.outputs.total_instructions }}';
+            const coveredInstructions = '${{ steps.coverage.outputs.covered_instructions }}';
+            const totalBranches = '${{ steps.coverage.outputs.total_branches }}';
+            const coveredBranches = '${{ steps.coverage.outputs.covered_branches }}';
+            const totalLines = '${{ steps.coverage.outputs.total_lines }}';
+            const coveredLines = '${{ steps.coverage.outputs.covered_lines }}';
+            
+            const body = `## 📊 Test Coverage Report
+            
+            | Coverage Type | Percentage | Covered/Total |
+            |---------------|------------|---------------|
+            | **Instruction** | **${instructionCoverage}%** | ${coveredInstructions}/${totalInstructions} |
+            | **Branch** | **${branchCoverage}%** | ${coveredBranches}/${totalBranches} |
+            | **Line** | **${lineCoverage}%** | ${coveredLines}/${totalLines} |
+            
+            📈 [View Detailed Coverage Report](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
+            
+            🎯 **Coverage Goals**: 80% instruction, 70% branch
+            
+            Generated by commit ${{ github.sha }}`;
+            
+            github.rest.repos.createCommitComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              commit_sha: context.sha,
+              body: body
+            });
+
+  publish-coverage:
+    needs: test-and-coverage
+    runs-on: ubuntu-latest
+    if: success()
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download coverage reports
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage-reports
+          path: ./coverage-artifacts
+
+      - name: Publish coverage report to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        if: github.ref == 'refs/heads/main'
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./coverage-artifacts/jacoco/test/html
+          destination_dir: coverage
+          force_orphan: true
+          commit_message: 'Deploy coverage report for commit ${{ github.sha }}'
