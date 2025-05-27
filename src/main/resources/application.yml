@@ -22,46 +22,14 @@ object-storage-kit:
   # Connection and timeout settings
   connection-timeout-millis: 10000 # Connection timeout in milliseconds
   socket-timeout-millis: 50000 # Socket timeout in milliseconds
-  request-timeout-millis: 0 # Request timeout (0 = no timeout)
-  client-execution-timeout-millis: 0 # Client execution timeout (0 = no timeout)
-  
-  # Retry configuration
-  max-error-retry: 3 # Maximum number of retry attempts
-  retry-mode: standard # Retry mode: legacy, standard, adaptive
-  
-  # Advanced connection settings
-  max-connections: 50 # Maximum number of HTTP connections
-  connection-max-idle-millis: 60000 # Maximum idle time for connections
-  validate-after-inactivity-millis: 2000 # Validate connections after inactivity
-  use-expect-continue: true # Use HTTP 100-continue
-  
-  # SSL/TLS settings
-  disable-ssl: false # Disable SSL/TLS (not recommended for production)
-  ssl-verification-disabled: false # Disable SSL certificate verification (not recommended)
-  
-  # Multipart upload settings
-  multipart-threshold: 16777216 # 16MB - Minimum size for multipart upload
-  multipart-copy-threshold: 5368709120 # 5GB - Minimum size for multipart copy
-  multipart-copy-part-size: 104857600 # 100MB - Part size for multipart copy
-  minimum-upload-part-size: 5242880 # 5MB - Minimum part size for multipart upload
   
   # Transfer acceleration (S3 only)
   accelerate-mode-enabled: false # Enable S3 Transfer Acceleration
   dual-stack-enabled: false # Enable dual-stack endpoints (IPv4 and IPv6)
   
-  # Checksum settings
-  chunked-encoding-disabled: false # Disable chunked encoding
-  payload-signing-enabled: true # Enable payload signing
-  
   # Additional headers and metadata
   user-agent-prefix: # Custom user agent prefix
   user-agent-suffix: # Custom user agent suffix
-  
-  # Logging and debugging
-  wire-logging-enabled: false # Enable wire-level logging (for debugging)
-  
-  # Cache settings
-  dns-resolver-cache-size: 256 # DNS resolver cache size
   
   # Examples for different environments:
   # AWS S3:

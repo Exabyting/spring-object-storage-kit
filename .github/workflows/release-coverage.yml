@@ -1,0 +1,107 @@
+name: Release Coverage Report
+
+on:
+  release:
+    types: [ published ]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Release tag to generate coverage for'
+        required: true
+        type: string
+
+jobs:
+  coverage-report:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.tag || github.event.release.tag_name }}
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Cache Gradle packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Run tests with coverage
+        run: ./gradlew clean test jacocoTestReport
+
+      - name: Generate coverage summary
+        id: coverage
+        run: |
+          # Extract coverage percentage from JaCoCo XML report
+          INSTRUCTION_MISSED=$(grep -o 'missed="[0-9]*"' build/reports/jacoco/test/jacocoTestReport.xml | tail -1 | grep -o '[0-9]*')
+          INSTRUCTION_COVERED=$(grep -o 'covered="[0-9]*"' build/reports/jacoco/test/jacocoTestReport.xml | tail -1 | grep -o '[0-9]*')
+          TOTAL=$((INSTRUCTION_MISSED + INSTRUCTION_COVERED))
+          COVERAGE_PERCENT=$((INSTRUCTION_COVERED * 100 / TOTAL))
+          
+          echo "coverage_percent=$COVERAGE_PERCENT" >> $GITHUB_OUTPUT
+          echo "total_instructions=$TOTAL" >> $GITHUB_OUTPUT
+          echo "covered_instructions=$INSTRUCTION_COVERED" >> $GITHUB_OUTPUT
+
+      - name: Create coverage archive
+        run: |
+          cd build/reports/jacoco/test/html
+          zip -r ../../../../../coverage-report-${{ github.event.inputs.tag || github.event.release.tag_name }}.zip .
+
+      - name: Upload coverage to release
+        if: github.event_name == 'release'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.event.release.tag_name }}
+          files: coverage-report-${{ github.event.release.tag_name }}.zip
+
+      - name: Upload coverage artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report-${{ github.event.inputs.tag || github.event.release.tag_name }}
+          path: |
+            build/reports/jacoco/
+            coverage-report-*.zip
+
+      - name: Update release notes with coverage
+        if: github.event_name == 'release'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const coverage = '${{ steps.coverage.outputs.coverage_percent }}';
+            const total = '${{ steps.coverage.outputs.total_instructions }}';
+            const covered = '${{ steps.coverage.outputs.covered_instructions }}';
+            const tag = '${{ github.event.release.tag_name }}';
+            
+            const releaseId = context.payload.release.id;
+            const currentBody = context.payload.release.body || '';
+            
+            const coverageSection = `
+            
+            ## 📊 Test Coverage
+            
+            **Overall Coverage:** ${coverage}% (${covered}/${total} instructions)
+            
+            📁 [Download Coverage Report](https://github.com/${{ github.repository }}/releases/download/${tag}/coverage-report-${tag}.zip)
+            `;
+            
+            const newBody = currentBody + coverageSection;
+            
+            await github.rest.repos.updateRelease({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              release_id: releaseId,
+              body: newBody
+            });
