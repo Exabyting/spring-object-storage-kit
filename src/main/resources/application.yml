@@ -23,29 +23,13 @@ object-storage-kit:
   connection-timeout-millis: 10000 # Connection timeout in milliseconds
   socket-timeout-millis: 50000 # Socket timeout in milliseconds
   
-  # Multipart upload settings
-  multipart-min-part-size: 5242880 # 5MB - Minimum part size for multipart uploads
-  multipart-copy-threshold: 5368709120 # 5GB - Minimum size for multipart copy
-  multipart-copy-part-size: 104857600 # 100MB - Part size for multipart copy
-  minimum-upload-part-size: 5242880 # 5MB - Minimum part size for multipart upload
-  
   # Transfer acceleration (S3 only)
   accelerate-mode-enabled: false # Enable S3 Transfer Acceleration
   dual-stack-enabled: false # Enable dual-stack endpoints (IPv4 and IPv6)
   
-  # Checksum settings
-  chunked-encoding-disabled: false # Disable chunked encoding
-  payload-signing-enabled: true # Enable payload signing
-  
   # Additional headers and metadata
   user-agent-prefix: # Custom user agent prefix
   user-agent-suffix: # Custom user agent suffix
-  
-  # Logging and debugging
-  wire-logging-enabled: false # Enable wire-level logging (for debugging)
-  
-  # Cache settings
-  dns-resolver-cache-size: 256 # DNS resolver cache size
   
   # Examples for different environments:
   # AWS S3:

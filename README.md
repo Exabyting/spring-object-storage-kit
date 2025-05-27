@@ -138,29 +138,13 @@ object-storage-kit:
   connection-timeout-millis: 10000 # Connection timeout in milliseconds
   socket-timeout-millis: 50000 # Socket timeout in milliseconds
 
-  # Multipart upload settings
-  multipart-min-part-size: 5242880 # 5MB - Minimum part size for multipart uploads
-  multipart-copy-threshold: 5368709120 # 5GB - Minimum size for multipart copy
-  multipart-copy-part-size: 104857600 # 100MB - Part size for multipart copy
-  minimum-upload-part-size: 5242880 # 5MB - Minimum part size for multipart upload
-
   # Transfer acceleration (S3 only)
   accelerate-mode-enabled: false # Enable S3 Transfer Acceleration
   dual-stack-enabled: false # Enable dual-stack endpoints (IPv4 and IPv6)
 
-  # Checksum settings
-  chunked-encoding-disabled: false # Disable chunked encoding
-  payload-signing-enabled: true # Enable payload signing
-
   # Additional headers and metadata
   user-agent-prefix: # Custom user agent prefix
   user-agent-suffix: # Custom user agent suffix
-
-  # Logging and debugging
-  wire-logging-enabled: false # Enable wire-level logging (for debugging)
-
-  # Cache settings
-  dns-resolver-cache-size: 256 # DNS resolver cache size
 ```
 
 ### MinIO Configuration
@@ -179,17 +163,6 @@ object-storage-kit:
   # Connection and timeout settings
   connection-timeout-millis: 10000
   socket-timeout-millis: 50000
-
-  # Multipart upload settings
-  multipart-min-part-size: 5242880 # 5MB
-  minimum-upload-part-size: 5242880 # 5MB
-
-  # Security settings
-  payload-signing-enabled: true
-  chunked-encoding-disabled: false
-
-  # Logging for development
-  wire-logging-enabled: false
 ```
 
 ### S3-Compatible Services Configuration
@@ -208,15 +181,6 @@ object-storage-kit:
   # Connection settings
   connection-timeout-millis: 10000
   socket-timeout-millis: 50000
-
-  # Performance tuning
-  multipart-min-part-size: 5242880
-  multipart-copy-threshold: 5368709120
-  minimum-upload-part-size: 5242880
-
-  # Security
-  payload-signing-enabled: true
-  chunked-encoding-disabled: false
 ```
 
 ### Production Configuration
@@ -233,19 +197,6 @@ object-storage-kit:
    # Connection and timeout settings
    connection-timeout-millis: 5000
    socket-timeout-millis: 30000
-
-   # Optimized multipart upload settings
-   multipart-min-part-size: 5242880      # 5MB
-   multipart-copy-threshold: 5368709120  # 5GB
-   multipart-copy-part-size: 104857600   # 100MB
-   minimum-upload-part-size: 5242880     # 5MB
-
-   # Security settings
-   payload-signing-enabled: true
-   chunked-encoding-disabled: false
-
-   # Performance optimizations
-   dns-resolver-cache-size: 512
 
    # Custom user agent for monitoring
    user-agent-prefix: "MyApp"
@@ -446,14 +397,7 @@ noted.
 | `connection-timeout-millis` | int  | `10000` | Connection timeout in milliseconds |
 | `socket-timeout-millis`     | int  | `50000` | Socket timeout in milliseconds     |
 
-### Multipart Upload Settings
 
-| Property                   | Type | Default      | Description                                   |
-|----------------------------|------|--------------|-----------------------------------------------|
-| `multipart-min-part-size`  | long | `5242880`    | Minimum part size for multipart uploads (5MB) |
-| `multipart-copy-threshold` | long | `5368709120` | Minimum size for multipart copy (5GB)         |
-| `multipart-copy-part-size` | long | `104857600`  | Part size for multipart copy (100MB)          |
-| `minimum-upload-part-size` | long | `5242880`    | Minimum part size for multipart upload (5MB)  |
 
 ### Transfer Acceleration (S3 Only)
 
@@ -462,12 +406,7 @@ noted.
 | `accelerate-mode-enabled` | boolean | `false` | Enable S3 Transfer Acceleration             |
 | `dual-stack-enabled`      | boolean | `false` | Enable dual-stack endpoints (IPv4 and IPv6) |
 
-### Security & Checksum Settings
 
-| Property                    | Type    | Default | Description              |
-|-----------------------------|---------|---------|--------------------------|
-| `chunked-encoding-disabled` | boolean | `false` | Disable chunked encoding |
-| `payload-signing-enabled`   | boolean | `true`  | Enable payload signing   |
 
 ### Custom Headers & Metadata
 
@@ -476,17 +415,9 @@ noted.
 | `user-agent-prefix` | string | null    | Custom user agent prefix |
 | `user-agent-suffix` | string | null    | Custom user agent suffix |
 
-### Logging & Debugging
 
-| Property               | Type    | Default | Description                               |
-|------------------------|---------|---------|-------------------------------------------|
-| `wire-logging-enabled` | boolean | `false` | Enable wire-level logging (for debugging) |
 
-### Cache Settings
 
-| Property                  | Type | Default | Description             |
-|---------------------------|------|---------|-------------------------|
-| `dns-resolver-cache-size` | int  | `256`   | DNS resolver cache size |
 
 ### Configuration Examples by Environment
 
