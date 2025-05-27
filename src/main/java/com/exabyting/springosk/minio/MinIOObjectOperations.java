@@ -28,9 +28,6 @@ public class MinIOObjectOperations implements ObjectOperations {
     public Boolean upload(@Nonnull String bucketName, @Nonnull String objectName, @Nonnull byte[] data) {
         try {
             validateParameters(bucketName, objectName);
-            if (data == null || data.length == 0) {
-                throw new IllegalArgumentException("Data cannot be null");
-            }
 
             log.info("Uploading object '{}' to MinIO bucket '{}'", objectName, bucketName);
 

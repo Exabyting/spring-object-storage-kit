@@ -2,7 +2,7 @@ package com.exabyting.springosk.validation;
 
 import com.exabyting.springosk.config.PropertiesConfig;
 import com.exabyting.springosk.config.S3Config;
-import com.exabyting.springosk.core.ObjectStorageOperations;
+import com.exabyting.springosk.core.ObjectStorageClient;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @SpringBootTest(classes = {
         S3Config.class,
         PropertiesConfig.class,
-        ObjectStorageOperations.class,
+        ObjectStorageClient.class,
         com.exabyting.springosk.s3.S3BucketOperations.class,
         com.exabyting.springosk.s3.S3ObjectOperations.class
 })
@@ -23,13 +23,13 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
         "object-storage-kit.access-key=test",
         "object-storage-kit.secret-key=test"
 })
-class ObjectStorageOperationsValidationTest {
+class ObjectStorageClientValidationTest {
 
     @Autowired
-    private ObjectStorageOperations objectStorageOperations;
+    private ObjectStorageClient objectStorageClient;
 
     @Test
     void testObjectStorageOperationsAutowiring() {
-        assertNotNull(objectStorageOperations, "ObjectStorageOperations should be autowired successfully");
+        assertNotNull(objectStorageClient, "ObjectStorageOperations should be autowired successfully");
     }
 }

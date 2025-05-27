@@ -30,9 +30,6 @@ public class S3ObjectOperations implements ObjectOperations {
     public Boolean upload(@Nonnull String bucketName, @Nonnull String objectName, @Nonnull byte[] data) {
         try {
             validateParameters(bucketName, objectName);
-            if (data == null) {
-                throw new IllegalArgumentException("Data cannot be null");
-            }
 
             log.info("Uploading object '{}' to S3 bucket '{}'", objectName, bucketName);
 

@@ -7,7 +7,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class ObjectStorageOperations {
+public class ObjectStorageClient {
     private final BucketOperations bucketOperations;
     private final ObjectOperations objectOperations;
 
