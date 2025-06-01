@@ -3,6 +3,10 @@ plugins {
     id 'org.springframework.boot' version '3.5.0' apply false
     id 'io.spring.dependency-management' version '1.1.+'
     id 'jacoco'
+    id 'java-library'
+    id 'maven-publish'
+    id 'signing'
+    id 'org.jreleaser' version '1.18.0'
 }
 
 group = 'com.exabyting.springosk'
@@ -25,6 +29,8 @@ ext {
 java {
     sourceCompatibility = JavaVersion.VERSION_17
     targetCompatibility = JavaVersion.VERSION_17
+    withJavadocJar()
+    withSourcesJar()
 }
 
 dependencies {
@@ -82,4 +88,77 @@ jacocoTestCoverageVerification {
             }
         }
     }
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = 'com.exabyting.springosk'
+            artifactId = 'spring-object-storage-kit'
+
+            from components.java
+
+            pom {
+                name = 'spring-object-storage-kit'
+                description = 'A comprehensive Spring Boot autoconfiguration library that provides unified object storage capabilities for AWS S3 and MinIO with extensive configuration options and seamless integration.'
+                url = 'https://github.com/Exabyting/spring-object-storage-kit'
+                inceptionYear = '2025'
+                licenses {
+                    license {
+                        name = 'MIT License'
+                        url = 'https://opensource.org/licenses/MIT'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'sadman-exabyting'
+                        name = 'Sadman Sakib'
+                        organization = 'Exabyting'
+                        organizationUrl = 'https://exabyting.com'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:https://github.com/Exabyting/spring-object-storage-kit'
+                    developerConnection = 'scm:git:ssh://github.com/Exabyting/spring-object-storage-kit'
+                    url = 'https://github.com/Exabyting/spring-object-storage-kit'
+                }
+            }
+        }
+    }
+
+    repositories {
+        maven {
+            url = layout.buildDirectory.dir('staging-deploy')
+            credentials {
+                username = findProperty("sonatypeUsername")
+                password = findProperty("sonatypePassword")
+            }
+        }
+    }
+}
+
+jreleaser {
+    signing {
+        active = 'ALWAYS'
+        armored = true
+    }
+    deploy {
+        maven {
+            mavenCentral {
+                sonatype {
+                    active = 'ALWAYS'
+                    url = 'https://central.sonatype.com/api/v1/publisher'
+                    stagingRepository('target/staging-deploy')
+                }
+            }
+        }
+    }
+}
+
+signing {
+    useInMemoryPgpKeys(
+            findProperty("signing.key"),
+            findProperty("signing.passphrase")
+    )
+    sign publishing.publications.maven
 }
