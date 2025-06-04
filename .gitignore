@@ -42,3 +42,20 @@ bin/
 .DS_Store
 /.idea/
 /.gradle/
+
+### Security & Secrets ###
+gradle.properties
+local.properties
+.env
+.env.local
+*.key
+*.p12
+*.jks
+
+### JReleaser ###
+.jreleaser/
+out/jreleaser/
+
+### Signing ###
+secring.gpg
+pubring.gpg

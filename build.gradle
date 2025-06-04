@@ -17,13 +17,13 @@ repositories {
 }
 
 ext {
-    set("awsSdkVersion", "2.+")
-    set("lombokVersion", "1.18.+")
-    set("springBootVersion", "3.+")
-    set("testcontainersVersion", "1.21.+") // Updated version
-    set("junitPlatformVersion", "1.12.+")
-    set("minioVersion", "8.5.+")
-    set("lang3Version", "3.+")
+    set("awsSdkVersion", "2.31.54")  // Fixed to specific version
+    set("lombokVersion", "1.18.38")
+    set("springBootVersion", "3.3.0")
+    set("testcontainersVersion", "1.21.1") // Updated version
+    set("junitPlatformVersion", "1.13.0")
+    set("minioVersion", "8.5.17")
+    set("lang3Version", "3.17.0")
 }
 
 java {
@@ -129,26 +129,43 @@ publishing {
     repositories {
         maven {
             url = layout.buildDirectory.dir('staging-deploy')
-            credentials {
-                username = findProperty("sonatypeUsername")
-                password = findProperty("sonatypePassword")
-            }
         }
     }
 }
 
 jreleaser {
+    gitRootSearch = true
+    
+    project {
+        authors = ['Sadman Sakib']
+        license = 'MIT'
+        description = 'A comprehensive Spring Boot autoconfiguration library that provides unified object storage capabilities for AWS S3 and MinIO with extensive configuration options and seamless integration.'
+        longDescription = 'Spring Object Storage Kit (SpringOSK) is a powerful Spring Boot autoconfiguration library that simplifies object storage operations for both AWS S3 and MinIO. It provides unified APIs, extensive configuration options, and seamless integration with Spring Boot applications.'
+        website = 'https://github.com/Exabyting/spring-object-storage-kit'
+        docsUrl = 'https://github.com/Exabyting/spring-object-storage-kit/blob/main/README.md'
+    }
+    
+    release {
+        github {
+            commitAuthor {
+                name = 'Sadman Sakib'
+                email = 'sadman@exabyting.com'
+            }
+        }
+    }
+    
     signing {
         active = 'ALWAYS'
         armored = true
     }
+    
     deploy {
         maven {
             mavenCentral {
                 sonatype {
                     active = 'ALWAYS'
                     url = 'https://central.sonatype.com/api/v1/publisher'
-                    stagingRepository('target/staging-deploy')
+                    stagingRepository('build/staging-deploy')
                 }
             }
         }
@@ -156,9 +173,9 @@ jreleaser {
 }
 
 signing {
-    useInMemoryPgpKeys(
-            findProperty("signing.key"),
-            findProperty("signing.passphrase")
-    )
-    sign publishing.publications.maven
+   useInMemoryPgpKeys(
+           findProperty("signing.key"),
+           findProperty("signing.passphrase")
+   )
+   sign publishing.publications.maven
 }
